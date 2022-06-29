@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Header () {
+function Header() {
   return (
     <h1>Wine</h1>
   );

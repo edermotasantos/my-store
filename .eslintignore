@@ -1,0 +1,5 @@
+src/index.js
+src/tests/*.test.js
+src/serviceWorker.js
+src/services/movieData.js
+src/reportWebVitals.js

@@ -6,8 +6,8 @@ import ProductList from '../components/ProductList';
 function Products() {
   return (
     <MyStoreProvider>
-        <Header />
-        <ProductList />
+      <Header />
+      <ProductList />
     </MyStoreProvider>
   );
 }

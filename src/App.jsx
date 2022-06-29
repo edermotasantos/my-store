@@ -1,12 +1,12 @@
-import React from "react";
+import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Products from "./pages/Products";
+import Products from './pages/Products';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route index element={<Products />}/>
+        <Route index element={<Products />} />
       </Routes>
     </BrowserRouter>
   );
