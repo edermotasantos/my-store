@@ -6,10 +6,19 @@ import MyStoreContext from './MyStoreContext';
 
 function MyStoreProvider({ children }) {
   const [productFav, setproductFav] = useState();
+  const [page, setPage] = useState(1);
+  const [productsPage, setProductsPage] = useState();
+  const [isLoading, setIsLoading] = useState(true);
 
   const data = {
     productFav,
     setproductFav,
+    page,
+    setPage,
+    productsPage,
+    setProductsPage,
+    isLoading,
+    setIsLoading,
   };
 
   return (
