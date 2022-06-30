@@ -9,6 +9,7 @@ function MyStoreProvider({ children }) {
   const [page, setPage] = useState(1);
   const [productsPage, setProductsPage] = useState();
   const [isLoading, setIsLoading] = useState(true);
+  const [limit, setLimit] = useState(9);
 
   const data = {
     productFav,
@@ -19,6 +20,8 @@ function MyStoreProvider({ children }) {
     setProductsPage,
     isLoading,
     setIsLoading,
+    limit,
+    setLimit,
   };
 
   return (

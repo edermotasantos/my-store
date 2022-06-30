@@ -5,9 +5,10 @@ function ProductList() {
   const { page, setPage } = useContext(MyStoreContext);
   const { productsPage, setProductsPage } = useContext(MyStoreContext);
   const { isLoading, setIsLoading } = useContext(MyStoreContext);
+  const { limit } = useContext(MyStoreContext);
 
   const fetchWine = async () => {
-    const url = `https://wine-back-test.herokuapp.com/products?page=${page}&limit=10`;
+    const url = `https://wine-back-test.herokuapp.com/products?page=${page}&limit=${limit}`; // limit 9, 8, de acordo com o tamanho da tela
     const response = await fetch(url);
     const data = await response.json();
     setIsLoading(false);
@@ -18,7 +19,6 @@ function ProductList() {
   if (isLoading === true) fetchWine();
 
   const changePage = ({ target: { value } }) => {
-    console.log(value);
     const newValue = parseInt(value, 10);
     setPage(newValue);
     setIsLoading(true);
@@ -34,7 +34,6 @@ function ProductList() {
         }) => (
           <div key={id}>
             <div>
-              <p>{id}</p>
               <img alt={name} src={image} />
               <p>{name}</p>
               <div>
