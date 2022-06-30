@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import MyStoreContext from '../context/MyStoreContext';
 import Loading from './Loading';
+import fetchWine from '../services/requestWineAPI';
 
 function ProductList() {
   const { page, setPage } = useContext(MyStoreContext);
@@ -8,16 +9,13 @@ function ProductList() {
   const { isLoading, setIsLoading } = useContext(MyStoreContext);
   const { limit } = useContext(MyStoreContext);
 
-  const fetchWine = async () => {
-    const url = `https://wine-back-test.herokuapp.com/products?page=${page}&limit=${limit}`;
-    const response = await fetch(url);
-    const data = await response.json();
+  const getWine = async (pageNumber, limitNumber) => {
+    const response = await fetchWine(pageNumber, limitNumber);
     setIsLoading(false);
-    setProductsPage(data.items);
-    return data.items;
+    setProductsPage(response);
   };
 
-  if (isLoading === true) fetchWine();
+  if (isLoading === true) getWine(page, limit);
 
   const changePage = ({ target: { value } }) => {
     const newValue = parseInt(value, 10);
