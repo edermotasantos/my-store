@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import MyStoreContext from '../context/MyStoreContext';
+import Loading from './Loading';
 
 function ProductList() {
   const { page, setPage } = useContext(MyStoreContext);
@@ -8,7 +9,7 @@ function ProductList() {
   const { limit } = useContext(MyStoreContext);
 
   const fetchWine = async () => {
-    const url = `https://wine-back-test.herokuapp.com/products?page=${page}&limit=${limit}`; // limit 9, 8, de acordo com o tamanho da tela
+    const url = `https://wine-back-test.herokuapp.com/products?page=${page}&limit=${limit}`;
     const response = await fetch(url);
     const data = await response.json();
     setIsLoading(false);
@@ -28,7 +29,7 @@ function ProductList() {
     <>
       <p>produtos</p>
       { isLoading
-        ? <h3>carregando</h3>
+        ? <Loading />
         : productsPage.map(({
           image, name, price, priceMember, priceNonMember, discount, id,
         }) => (
