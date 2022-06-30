@@ -9,12 +9,6 @@ function ProductList() {
   const { isLoading, setIsLoading } = useContext(MyStoreContext);
   const { limit, setLimit } = useContext(MyStoreContext);
 
-  // const getWine = async (pageNumber, limitNumber) => {
-  //   const response = await fetchWine(pageNumber, limitNumber);
-  //   setIsLoading(false);
-  //   setProductsPage(response);
-  // };
-
   const getWine = async (pageNumber, limitNumber) => {
     const response = await fetchWine(pageNumber, limitNumber);
     setIsLoading(false);
