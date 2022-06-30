@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import MyStoreContext from '../context/MyStoreContext';
 import Loading from './Loading';
 import fetchWine from '../services/requestWineAPI';
@@ -7,7 +7,13 @@ function ProductList() {
   const { page, setPage } = useContext(MyStoreContext);
   const { productsPage, setProductsPage } = useContext(MyStoreContext);
   const { isLoading, setIsLoading } = useContext(MyStoreContext);
-  const { limit } = useContext(MyStoreContext);
+  const { limit, setLimit } = useContext(MyStoreContext);
+
+  // const getWine = async (pageNumber, limitNumber) => {
+  //   const response = await fetchWine(pageNumber, limitNumber);
+  //   setIsLoading(false);
+  //   setProductsPage(response);
+  // };
 
   const getWine = async (pageNumber, limitNumber) => {
     const response = await fetchWine(pageNumber, limitNumber);
@@ -15,7 +21,18 @@ function ProductList() {
     setProductsPage(response);
   };
 
-  if (isLoading === true) getWine(page, limit);
+  if (isLoading === true) {
+    useEffect(() => {
+      const currentHeight = window.screen.height;
+      const currentWidth = window.screen.width;
+
+      if (limit > 8 && (currentHeight < 900 || currentWidth < 1440)) {
+        setLimit(8);
+        setIsLoading(true);
+      }
+      getWine(page, limit);
+    }, []);
+  }
 
   const changePage = ({ target: { value } }) => {
     const newValue = parseInt(value, 10);
@@ -46,7 +63,7 @@ function ProductList() {
           </div>
         ))}
       <div>
-        { page > 1 ? <button type="button" onClick={() => setPage((prevState) => prevState - 1)}>Anterior</button>
+        { page > 1 ? <button type="button" onClick={() => setPage((prevState) => prevState - 1)}>&lt;&lt; Anterior</button>
           : <p> </p> }
         <button type="button" value={page} onClick={(e) => changePage(e)}>{page}</button>
         <button type="button" value={page + 1} onClick={(e) => changePage(e)}>{page + 1}</button>
