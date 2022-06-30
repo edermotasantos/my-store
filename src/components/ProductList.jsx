@@ -10,7 +10,6 @@ function ProductList() {
     const url = `https://wine-back-test.herokuapp.com/products?page=${page}&limit=10`;
     const response = await fetch(url);
     const data = await response.json();
-    console.log('data', data.items);
     setIsLoading(false);
     setProductsPage(data.items);
     return data.items;
@@ -40,6 +39,13 @@ function ProductList() {
             <button type="button">adicionar</button>
           </div>
         ))}
+      <div>
+        <button type="button">{ page }</button>
+        <button type="button">{ page + 1 }</button>
+        <button type="button">{ page + 2 }</button>
+        <p>...</p>
+        <button type="button">Próximo &gt;&gt;</button>
+      </div>
     </>
   );
 }
