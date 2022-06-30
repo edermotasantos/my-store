@@ -48,6 +48,8 @@ function ProductList() {
           </div>
         ))}
       <div>
+        { page > 1 ? <button type="button" onClick={() => setPage((prevState) => prevState - 1)}>Anterior</button>
+          : <p> </p> }
         <button type="button" value={page} onClick={(e) => changePage(e)}>{page}</button>
         <button type="button" value={page + 1} onClick={(e) => changePage(e)}>{page + 1}</button>
         <button type="button" value={page + 2} onClick={(e) => changePage(e)}>{page + 2}</button>
