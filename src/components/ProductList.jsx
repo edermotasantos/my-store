@@ -9,9 +9,16 @@ function ProductList() {
   const { isLoading, setIsLoading } = useContext(MyStoreContext);
   const { limit, setLimit } = useContext(MyStoreContext);
   const { priceFilter, setPriceFilter } = useContext(MyStoreContext);
+  const { numberOPages, setNumberOPages } = useContext(MyStoreContext);
 
   const getWine = async (pageNumber, limitNumber) => {
     const response = await RequestWineAPI.fetchWine(pageNumber, limitNumber);
+    const data = await RequestWineAPI.fetchWineDetails();
+    if (data !== numberOPages) {
+      setNumberOPages(data);
+    }
+    const newNumberOfPages = Math.ceil((data.length) / limit);
+    console.log(newNumberOfPages);
     setIsLoading(false);
     setProductsPage(response);
   };
@@ -122,8 +129,10 @@ function ProductList() {
         { page > 1 ? <button type="button" value={page - 1} onClick={(e) => changePage(e)}>&lt;&lt; Anterior</button>
           : <p> </p> }
         <button type="button" value={page} onClick={(e) => changePage(e)}>{page}</button>
-        <button type="button" value={page + 1} onClick={(e) => changePage(e)}>{page + 1}</button>
-        <button type="button" value={page + 2} onClick={(e) => changePage(e)}>{page + 2}</button>
+        { page + 1 <= 7 ? <button type="button" value={page + 1} onClick={(e) => changePage(e)}>{page + 1}</button>
+          : <p> </p> }
+        { page + 2 <= 7 ? <button type="button" value={page + 2} onClick={(e) => changePage(e)}>{page + 2}</button>
+          : <p> </p> }
         <p>...</p>
         <button type="button" value={page + 1} onClick={(e) => changePage(e)}>Próximo &gt;&gt;</button>
       </div>

@@ -12,6 +12,7 @@ function MyStoreProvider({ children }) {
   const [limit, setLimit] = useState(9);
   const [wineDetails, setWineDetails] = useState();
   const [priceFilter, setPriceFilter] = useState(false);
+  const [numberOPages, setNumberOPages] = useState(7);
 
   const data = {
     productFav,
@@ -28,6 +29,8 @@ function MyStoreProvider({ children }) {
     setWineDetails,
     priceFilter,
     setPriceFilter,
+    numberOPages,
+    setNumberOPages,
   };
 
   return (
