@@ -8,11 +8,44 @@ function ProductList() {
   const { productsPage, setProductsPage } = useContext(MyStoreContext);
   const { isLoading, setIsLoading } = useContext(MyStoreContext);
   const { limit, setLimit } = useContext(MyStoreContext);
+  const { priceFilter, setPriceFilter } = useContext(MyStoreContext);
 
   const getWine = async (pageNumber, limitNumber) => {
     const response = await RequestWineAPI.fetchWine(pageNumber, limitNumber);
     setIsLoading(false);
     setProductsPage(response);
+  };
+
+  const filteredPageByPrice = (dataFilteredByPrice) => {
+    let start = 0;
+    let end = limit;
+    if (page > 1) {
+      start = limit + 1;
+      end = start + limit;
+    }
+    const wineFilteredByPrice = dataFilteredByPrice.slice(start, end);
+    setIsLoading(false);
+    setProductsPage(wineFilteredByPrice);
+  };
+
+  const getWineByFilter = async ({ target: { value } }) => {
+    const price = JSON.parse(value);
+    const response = await RequestWineAPI.fetchWineDetails();
+    let dataFilteredByPrice = '';
+
+    if (price === 100) {
+      dataFilteredByPrice = response.filter((item) => item.priceMember <= price);
+    }
+    if (typeof price === 'object') {
+      dataFilteredByPrice = response.filter((item) => (
+        price[0] <= item.priceMember && item.priceMember <= price[1]
+      ));
+    }
+    if (price === 200) {
+      dataFilteredByPrice = response.filter((item) => item.priceMember >= price);
+    }
+    setPriceFilter(dataFilteredByPrice);
+    filteredPageByPrice(dataFilteredByPrice);
   };
 
   if (isLoading === true) {
@@ -24,7 +57,8 @@ function ProductList() {
         setLimit(8);
         setIsLoading(true);
       }
-      getWine(page, limit);
+      if (!priceFilter) getWine(page, limit);
+      if (priceFilter) filteredPageByPrice(priceFilter);
     }, []);
   }
 
@@ -36,6 +70,32 @@ function ProductList() {
 
   return (
     <>
+      <fieldset onChange={(e) => {
+        setIsLoading(true);
+        getWineByFilter(e);
+      }}
+      >
+        <legend>Refine sua busca</legend>
+        <legend>Por preço</legend>
+        <div>
+          <label htmlFor="first-radio">
+            Até R$100
+            <input type="radio" id="first-radio" name="first-radio" value="100" />
+          </label>
+        </div>
+        <div>
+          <label htmlFor="second-radio">
+            R$100 A R$200
+            <input type="radio" id="second-radio" name="second-radio" value="[100, 200]" />
+          </label>
+        </div>
+        <div>
+          <label htmlFor="third-radio">
+            Acima de R$175
+            <input type="radio" id="fifth-radio" name="third-radio" value="200" />
+          </label>
+        </div>
+      </fieldset>
       <p>produtos</p>
       { isLoading
         ? <Loading />
@@ -59,13 +119,13 @@ function ProductList() {
           </div>
         ))}
       <div>
-        { page > 1 ? <button type="button" onClick={() => setPage((prevState) => prevState - 1)}>&lt;&lt; Anterior</button>
+        { page > 1 ? <button type="button" value={page - 1} onClick={(e) => changePage(e)}>&lt;&lt; Anterior</button>
           : <p> </p> }
         <button type="button" value={page} onClick={(e) => changePage(e)}>{page}</button>
         <button type="button" value={page + 1} onClick={(e) => changePage(e)}>{page + 1}</button>
         <button type="button" value={page + 2} onClick={(e) => changePage(e)}>{page + 2}</button>
         <p>...</p>
-        <button type="button" onClick={() => setPage((prevState) => prevState + 1)}>Próximo &gt;&gt;</button>
+        <button type="button" value={page + 1} onClick={(e) => changePage(e)}>Próximo &gt;&gt;</button>
       </div>
     </>
   );
