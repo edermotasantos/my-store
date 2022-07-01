@@ -7,9 +7,10 @@ import MyStoreContext from './MyStoreContext';
 function MyStoreProvider({ children }) {
   const [productFav, setproductFav] = useState();
   const [page, setPage] = useState(1);
-  const [productsPage, setProductsPage] = useState();
+  const [productsPage, setProductsPage] = useState(<h3>...carregando</h3>);
   const [isLoading, setIsLoading] = useState(true);
   const [limit, setLimit] = useState(9);
+  const [wineDetails, setWineDetails] = useState();
 
   const data = {
     productFav,
@@ -22,6 +23,8 @@ function MyStoreProvider({ children }) {
     setIsLoading,
     limit,
     setLimit,
+    wineDetails,
+    setWineDetails,
   };
 
   return (

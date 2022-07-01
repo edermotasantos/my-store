@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 import MyStoreContext from '../context/MyStoreContext';
 import Loading from './Loading';
-import fetchWine from '../services/requestWineAPI';
+import RequestWineAPI from '../services/requestWineAPI';
 
 function ProductList() {
   const { page, setPage } = useContext(MyStoreContext);
@@ -10,7 +10,7 @@ function ProductList() {
   const { limit, setLimit } = useContext(MyStoreContext);
 
   const getWine = async (pageNumber, limitNumber) => {
-    const response = await fetchWine(pageNumber, limitNumber);
+    const response = await RequestWineAPI.fetchWine(pageNumber, limitNumber);
     setIsLoading(false);
     setProductsPage(response);
   };
@@ -44,8 +44,10 @@ function ProductList() {
         }) => (
           <div key={id}>
             <div>
-              <img alt={name} src={image} />
-              <p>{name}</p>
+              <a href={`/produto/${id}`}>
+                <img alt={name} src={image} />
+                <p>{name}</p>
+              </a>
               <div>
                 <p>{`R$${price}`.replace('.', ',')}</p>
                 <p>{`${discount}% OFF`}</p>
