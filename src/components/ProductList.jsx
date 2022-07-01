@@ -11,8 +11,7 @@ function ProductList() {
   const { priceFilter, setPriceFilter } = useContext(MyStoreContext);
   const { numberOPages, setNumberOPages } = useContext(MyStoreContext);
 
-  const currentNumberOfPages = async () => {
-    const data = await RequestWineAPI.fetchWineDetails();
+  const currentNumberOfPages = async (data) => {
     if (data !== numberOPages) {
       const newNumberOfPages = Math.ceil((data.length) / limit);
       setNumberOPages(newNumberOfPages);
@@ -21,13 +20,14 @@ function ProductList() {
 
   const getWine = async (pageNumber, limitNumber) => {
     const response = await RequestWineAPI.fetchWine(pageNumber, limitNumber);
-    await currentNumberOfPages();
+    const data = await RequestWineAPI.fetchWineDetails();
+    await currentNumberOfPages(data);
     setIsLoading(false);
     setProductsPage(response);
   };
 
   const filteredPageByPrice = async (dataFilteredByPrice) => {
-    await currentNumberOfPages();
+    await currentNumberOfPages(dataFilteredByPrice);
     setPage(1);
     let start = 0;
     let end = limit;
@@ -56,6 +56,7 @@ function ProductList() {
     if (price === 200) {
       dataFilteredByPrice = response.filter((item) => item.priceMember >= price);
     }
+    setIsLoading(true);
     setPriceFilter(dataFilteredByPrice);
     await filteredPageByPrice(dataFilteredByPrice);
   };
@@ -83,7 +84,6 @@ function ProductList() {
   return (
     <>
       <fieldset onChange={(e) => {
-        // setIsLoading(true);
         getWineByFilter(e);
       }}
       >
