@@ -2,7 +2,14 @@ import React from 'react';
 
 function Header() {
   return (
-    <h1>Wine</h1>
+    <div>
+      <h1>Wine</h1>
+      <p>Clube</p>
+      <p>Loja</p>
+      <p>Produtores</p>
+      <p>Ofertas</p>
+      <p>Eventos</p>
+    </div>
   );
 }
 
