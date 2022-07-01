@@ -44,6 +44,7 @@ function ProductList() {
     const price = JSON.parse(value);
     const response = await RequestWineAPI.fetchWineDetails();
     let dataFilteredByPrice = '';
+    setIsLoading(true);
 
     if (price === 100) {
       dataFilteredByPrice = response.filter((item) => item.priceMember <= price);
@@ -56,7 +57,6 @@ function ProductList() {
     if (price === 200) {
       dataFilteredByPrice = response.filter((item) => item.priceMember >= price);
     }
-    setIsLoading(true);
     setPriceFilter(dataFilteredByPrice);
     await filteredPageByPrice(dataFilteredByPrice);
   };
@@ -97,7 +97,7 @@ function ProductList() {
         </div>
         <div>
           <label htmlFor="second-radio">
-            R$100 A R$200
+            R$100 à R$200
             <input type="radio" id="second-radio" name="filter-by-price" value="[100, 200]" />
           </label>
         </div>
