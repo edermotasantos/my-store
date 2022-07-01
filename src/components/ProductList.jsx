@@ -11,19 +11,24 @@ function ProductList() {
   const { priceFilter, setPriceFilter } = useContext(MyStoreContext);
   const { numberOPages, setNumberOPages } = useContext(MyStoreContext);
 
-  const getWine = async (pageNumber, limitNumber) => {
-    const response = await RequestWineAPI.fetchWine(pageNumber, limitNumber);
+  const currentNumberOfPages = async () => {
     const data = await RequestWineAPI.fetchWineDetails();
     if (data !== numberOPages) {
-      setNumberOPages(data);
+      const newNumberOfPages = Math.ceil((data.length) / limit);
+      setNumberOPages(newNumberOfPages);
     }
-    const newNumberOfPages = Math.ceil((data.length) / limit);
-    console.log(newNumberOfPages);
+  };
+
+  const getWine = async (pageNumber, limitNumber) => {
+    const response = await RequestWineAPI.fetchWine(pageNumber, limitNumber);
+    await currentNumberOfPages();
     setIsLoading(false);
     setProductsPage(response);
   };
 
-  const filteredPageByPrice = (dataFilteredByPrice) => {
+  const filteredPageByPrice = async (dataFilteredByPrice) => {
+    await currentNumberOfPages();
+    setPage(1);
     let start = 0;
     let end = limit;
     if (page > 1) {
@@ -52,7 +57,7 @@ function ProductList() {
       dataFilteredByPrice = response.filter((item) => item.priceMember >= price);
     }
     setPriceFilter(dataFilteredByPrice);
-    filteredPageByPrice(dataFilteredByPrice);
+    await filteredPageByPrice(dataFilteredByPrice);
   };
 
   if (isLoading === true) {
@@ -78,7 +83,7 @@ function ProductList() {
   return (
     <>
       <fieldset onChange={(e) => {
-        setIsLoading(true);
+        // setIsLoading(true);
         getWineByFilter(e);
       }}
       >
@@ -87,19 +92,19 @@ function ProductList() {
         <div>
           <label htmlFor="first-radio">
             Até R$100
-            <input type="radio" id="first-radio" name="first-radio" value="100" />
+            <input type="radio" id="first-radio" name="filter-by-price" value="100" />
           </label>
         </div>
         <div>
           <label htmlFor="second-radio">
             R$100 A R$200
-            <input type="radio" id="second-radio" name="second-radio" value="[100, 200]" />
+            <input type="radio" id="second-radio" name="filter-by-price" value="[100, 200]" />
           </label>
         </div>
         <div>
           <label htmlFor="third-radio">
             Acima de R$175
-            <input type="radio" id="fifth-radio" name="third-radio" value="200" />
+            <input type="radio" id="fifth-radio" name="filter-by-price" value="200" />
           </label>
         </div>
       </fieldset>
@@ -129,12 +134,13 @@ function ProductList() {
         { page > 1 ? <button type="button" value={page - 1} onClick={(e) => changePage(e)}>&lt;&lt; Anterior</button>
           : <p> </p> }
         <button type="button" value={page} onClick={(e) => changePage(e)}>{page}</button>
-        { page + 1 <= 7 ? <button type="button" value={page + 1} onClick={(e) => changePage(e)}>{page + 1}</button>
+        { page + 1 <= numberOPages ? <button type="button" value={page + 1} onClick={(e) => changePage(e)}>{page + 1}</button>
           : <p> </p> }
-        { page + 2 <= 7 ? <button type="button" value={page + 2} onClick={(e) => changePage(e)}>{page + 2}</button>
+        { page + 2 <= numberOPages ? <button type="button" value={page + 2} onClick={(e) => changePage(e)}>{page + 2}</button>
           : <p> </p> }
         <p>...</p>
-        <button type="button" value={page + 1} onClick={(e) => changePage(e)}>Próximo &gt;&gt;</button>
+        { page + 1 <= numberOPages ? <button type="button" value={page + 1} onClick={(e) => changePage(e)}>Próximo &gt;&gt;</button>
+          : <p> </p> }
       </div>
     </>
   );
