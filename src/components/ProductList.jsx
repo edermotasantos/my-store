@@ -2,6 +2,7 @@ import React, { useContext, useEffect } from 'react';
 import MyStoreContext from '../context/MyStoreContext';
 import Loading from './Loading';
 import RequestWineAPI from '../services/requestWineAPI';
+import filteredPageByName from '../utils/filters';
 
 function ProductList() {
   const { page, setPage } = useContext(MyStoreContext);
@@ -10,6 +11,7 @@ function ProductList() {
   const { limit, setLimit } = useContext(MyStoreContext);
   const { priceFilter, setPriceFilter } = useContext(MyStoreContext);
   const { numberOPages, setNumberOPages } = useContext(MyStoreContext);
+  const { nameFilter } = useContext(MyStoreContext);
 
   const currentNumberOfPages = async (data) => {
     if (data !== numberOPages) {
@@ -70,8 +72,9 @@ function ProductList() {
         setLimit(8);
         setIsLoading(true);
       }
-      if (!priceFilter) getWine(page, limit);
-      if (priceFilter) filteredPageByPrice(priceFilter);
+      if (!priceFilter && !nameFilter) getWine(page, limit);
+      if (priceFilter && !nameFilter) filteredPageByPrice(priceFilter);
+      if (!priceFilter && nameFilter) filteredPageByName(nameFilter, page, limit);
     }, []);
   }
 
