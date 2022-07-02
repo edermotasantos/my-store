@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import MyStoreContext from '../context/MyStoreContext';
 import Loading from './Loading';
 import RequestWineAPI from '../services/requestWineAPI';
+import findWineById from '../utils/findWineById';
 
 function ProductDetails() {
   const { isLoading } = useContext(MyStoreContext);
@@ -12,8 +13,7 @@ function ProductDetails() {
   const getWineDetails = async () => {
     const response = await RequestWineAPI.fetchWineDetails(id);
     const userId = parseInt(id, 10);
-
-    const product = response.find((wine) => wine.id === userId);
+    const product = findWineById(response, userId);
     setWineDetails(product);
   };
 
