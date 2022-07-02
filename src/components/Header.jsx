@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import MyStoreContext from '../context/MyStoreContext';
 import RequestWineAPI from '../services/requestWineAPI';
-import filteredPageByName from '../utils/filters';
+import paginationByFilter from '../utils/paginationByFilter';
 
 function Header() {
   const { page, setPage } = useContext(MyStoreContext);
@@ -33,7 +33,7 @@ function Header() {
     setNameFilter(dataFilteredByName);
     setPage(1);
     await currentNumberOfPages(dataFilteredByName);
-    const wineFilteredByName = filteredPageByName(dataFilteredByName, page, limit);
+    const wineFilteredByName = paginationByFilter(dataFilteredByName, page, limit);
     setIsLoading(false);
     setProductsPage(wineFilteredByName);
   };

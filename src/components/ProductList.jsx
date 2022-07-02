@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from 'react';
 import MyStoreContext from '../context/MyStoreContext';
 import Loading from './Loading';
 import RequestWineAPI from '../services/requestWineAPI';
-import filteredPageByName from '../utils/filters';
+import filteredPageByName from '../utils/paginationByFilter';
 
 function ProductList() {
   const { page, setPage } = useContext(MyStoreContext);
@@ -28,20 +28,6 @@ function ProductList() {
     setProductsPage(response);
   };
 
-  const filteredPageByPrice = async (dataFilteredByPrice) => {
-    await currentNumberOfPages(dataFilteredByPrice);
-    setPage(1);
-    let start = 0;
-    let end = limit;
-    if (page > 1) {
-      start = limit + 1;
-      end = start + limit;
-    }
-    const wineFilteredByPrice = dataFilteredByPrice.slice(start, end);
-    setIsLoading(false);
-    setProductsPage(wineFilteredByPrice);
-  };
-
   const getWineByFilter = async ({ target: { value } }) => {
     const price = JSON.parse(value);
     const response = await RequestWineAPI.fetchWineDetails();
@@ -60,7 +46,11 @@ function ProductList() {
       dataFilteredByPrice = response.filter((item) => item.priceMember >= price);
     }
     setPriceFilter(dataFilteredByPrice);
-    await filteredPageByPrice(dataFilteredByPrice);
+    setPage(1);
+    await currentNumberOfPages(dataFilteredByPrice);
+    const wineFilteredByPrice = await filteredPageByName(dataFilteredByPrice);
+    setIsLoading(false);
+    setProductsPage(wineFilteredByPrice);
   };
 
   if (isLoading === true) {
@@ -73,7 +63,11 @@ function ProductList() {
         setIsLoading(true);
       }
       if (!priceFilter && !nameFilter) getWine(page, limit);
-      if (priceFilter && !nameFilter) filteredPageByPrice(priceFilter);
+      if (priceFilter && !nameFilter) {
+        const wineFilteredByPrice = filteredPageByName(priceFilter, page, limit);
+        setIsLoading(false);
+        setProductsPage(wineFilteredByPrice);
+      }
       if (!priceFilter && nameFilter) {
         const wineFilteredByName = filteredPageByName(nameFilter, page, limit);
         setIsLoading(false);

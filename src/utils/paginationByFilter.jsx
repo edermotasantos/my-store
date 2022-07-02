@@ -1,4 +1,4 @@
-const filteredPageByName = (dataFilteredByName, page, limit) => {
+const paginationByFilter = (dataFilteredByName, page, limit) => {
   let start = 0;
   let end = limit;
   if (page > 1) {
@@ -9,4 +9,4 @@ const filteredPageByName = (dataFilteredByName, page, limit) => {
   return wineFilteredByName;
 };
 
-export default filteredPageByName;
+export default paginationByFilter;
