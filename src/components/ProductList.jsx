@@ -74,7 +74,11 @@ function ProductList() {
       }
       if (!priceFilter && !nameFilter) getWine(page, limit);
       if (priceFilter && !nameFilter) filteredPageByPrice(priceFilter);
-      if (!priceFilter && nameFilter) filteredPageByName(nameFilter, page, limit);
+      if (!priceFilter && nameFilter) {
+        const wineFilteredByName = filteredPageByName(nameFilter, page, limit);
+        setIsLoading(false);
+        setProductsPage(wineFilteredByName);
+      }
     }, []);
   }
 
