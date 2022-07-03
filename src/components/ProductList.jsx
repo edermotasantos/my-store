@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from 'react';
 import MyStoreContext from '../context/MyStoreContext';
 import Loading from './Loading';
 import RequestWineAPI from '../services/requestWineAPI';
-import filteredPageByName from '../utils/paginationByFilter';
+import paginationByFilter from '../utils/paginationByFilter';
 import findWineById from '../utils/findWineById';
 
 function ProductList() {
@@ -22,10 +22,8 @@ function ProductList() {
   const productsAddedToCart = insideTheCart;
 
   const currentNumberOfPages = async (data) => {
-    if (data !== numberOPages) {
-      const newNumberOfPages = Math.ceil((data.length) / limit);
-      setNumberOPages(newNumberOfPages);
-    }
+    const newNumberOfPages = Math.ceil((data.length) / limit);
+    if (newNumberOfPages !== numberOPages) setNumberOPages(newNumberOfPages);
   };
 
   const getWine = async (pageNumber, limitNumber) => {
@@ -56,7 +54,7 @@ function ProductList() {
     setPriceFilter(dataFilteredByPrice);
     setPage(1);
     await currentNumberOfPages(dataFilteredByPrice);
-    const wineFilteredByPrice = await filteredPageByName(dataFilteredByPrice);
+    const wineFilteredByPrice = await paginationByFilter(dataFilteredByPrice, page, limit);
     setIsLoading(false);
     setProductsPage(wineFilteredByPrice);
   };
@@ -72,12 +70,12 @@ function ProductList() {
       }
       if (!priceFilter && !nameFilter) getWine(page, limit);
       if (priceFilter && !nameFilter) {
-        const wineFilteredByPrice = filteredPageByName(priceFilter, page, limit);
+        const wineFilteredByPrice = paginationByFilter(priceFilter, page, limit);
         setIsLoading(false);
         setProductsPage(wineFilteredByPrice);
       }
       if (!priceFilter && nameFilter) {
-        const wineFilteredByName = filteredPageByName(nameFilter, page, limit);
+        const wineFilteredByName = paginationByFilter(nameFilter, page, limit);
         setIsLoading(false);
         setProductsPage(wineFilteredByName);
       }
