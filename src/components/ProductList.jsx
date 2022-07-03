@@ -3,6 +3,7 @@ import MyStoreContext from '../context/MyStoreContext';
 import Loading from './Loading';
 import RequestWineAPI from '../services/requestWineAPI';
 import filteredPageByName from '../utils/paginationByFilter';
+import findWineById from '../utils/findWineById';
 
 function ProductList() {
   const { page, setPage } = useContext(MyStoreContext);
@@ -12,6 +13,13 @@ function ProductList() {
   const { priceFilter, setPriceFilter } = useContext(MyStoreContext);
   const { numberOPages, setNumberOPages } = useContext(MyStoreContext);
   const { nameFilter } = useContext(MyStoreContext);
+  const { insideTheCart, setInsideTheCart } = useContext(MyStoreContext);
+  const { userName } = useContext(MyStoreContext);
+  const { cart, setCart } = useContext(MyStoreContext);
+  const { count, setCount } = useContext(MyStoreContext);
+  const { setTotalItemsAddedToCart } = useContext(MyStoreContext);
+
+  const productsAddedToCart = insideTheCart;
 
   const currentNumberOfPages = async (data) => {
     if (data !== numberOPages) {
@@ -82,6 +90,30 @@ function ProductList() {
     setIsLoading(true);
   };
 
+  const addToCart = async ({ target: { value } }) => {
+    const id = parseInt(value, 10);
+    if (productsAddedToCart[id] !== undefined) {
+      productsAddedToCart[id] += 1;
+    }
+    if (productsAddedToCart[id] === undefined) {
+      productsAddedToCart[id] = 1;
+      const response = await RequestWineAPI.fetchWineDetails(id);
+      const userId = parseInt(id, 10);
+      const product = findWineById(response, userId);
+      setCart((prevState) => ({
+        ...prevState,
+        [count]: product,
+      }));
+      const stringStorage = JSON.stringify(cart);
+      localStorage.setItem(`${userName}sCart`, stringStorage);
+      setCount((prevState) => prevState + 1);
+    }
+    setInsideTheCart(
+      { ...productsAddedToCart },
+    );
+    setTotalItemsAddedToCart((prevState) => prevState + 1);
+  };
+
   return (
     <>
       <fieldset onChange={(e) => {
@@ -128,7 +160,7 @@ function ProductList() {
               <p>{`SÓCIO WINE R$${priceMember}`.replace('.', ',')}</p>
               <p>{`NÃO SÓCIO R$${priceNonMember}`.replace('.', ',')}</p>
             </div>
-            <button type="button">adicionar</button>
+            <button type="button" value={id} onClick={(e) => addToCart(e)}>adicionar</button>
           </div>
         ))}
       <div>

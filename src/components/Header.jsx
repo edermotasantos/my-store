@@ -11,6 +11,7 @@ function Header() {
   const { limit } = useContext(MyStoreContext);
   const { numberOPages, setNumberOPages } = useContext(MyStoreContext);
   const { setProductsPage } = useContext(MyStoreContext);
+  const { totalItemsAddedToCart } = useContext(MyStoreContext);
   const { newSearch } = search;
 
   const handleChange = ({ target: { name, value } }) => {
@@ -48,6 +49,7 @@ function Header() {
       <p>Eventos</p>
       <input type="text" name="newSearch" value={newSearch} onChange={(e) => handleChange(e)} />
       <button type="button" onClick={(e) => handleClick(e)}>pesquisar</button>
+      {totalItemsAddedToCart}
     </div>
   );
 }

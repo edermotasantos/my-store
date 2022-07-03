@@ -5,7 +5,6 @@ import React, { useState } from 'react';
 import MyStoreContext from './MyStoreContext';
 
 function MyStoreProvider({ children }) {
-  const [productFav, setproductFav] = useState();
   const [page, setPage] = useState(1);
   const [productsPage, setProductsPage] = useState(<h3>...carregando</h3>);
   const [isLoading, setIsLoading] = useState(true);
@@ -15,10 +14,13 @@ function MyStoreProvider({ children }) {
   const [numberOPages, setNumberOPages] = useState(7);
   const [search, setSearch] = useState({ newSearch: '' });
   const [nameFilter, setNameFilter] = useState(false);
+  const [insideTheCart, setInsideTheCart] = useState({});
+  const [cart, setCart] = useState([]);
+  const [userName, setUserName] = useState('admin');
+  const [count, setCount] = useState(0);
+  const [totalItemsAddedToCart, setTotalItemsAddedToCart] = useState(0);
 
   const data = {
-    productFav,
-    setproductFav,
     page,
     setPage,
     productsPage,
@@ -37,6 +39,16 @@ function MyStoreProvider({ children }) {
     setSearch,
     nameFilter,
     setNameFilter,
+    insideTheCart,
+    setInsideTheCart,
+    cart,
+    setCart,
+    userName,
+    setUserName,
+    count,
+    setCount,
+    totalItemsAddedToCart,
+    setTotalItemsAddedToCart,
   };
 
   return (
